@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Grammar Correction Tool</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="topbar">
+            <h1>AI-Powered Grammar Correction Tool</h1>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
+        </div>
+        <form action="/correct" method="post">
+            <textarea name="text" placeholder="Enter your text here..." rows="10">{% if original %}{{ original }}{% endif %}</textarea>
+            <br>
+            <button type="submit">Check Grammar</button>
+            <button type="reset">Reset</button>
+        </form>
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+        {% if tool_message %}
+            <p class="error">{{ tool_message }}</p>
+        {% endif %}
+        {% if original %}
+            <h2>Original Text:</h2>
+            <p class="original">{{ original }}</p>
+            <h2>Corrected Text:</h2>
+            {% if corrected_html %}
+                <p class="corrected">{{ corrected_html|safe }}</p>
+            {% else %}
+                <p class="corrected">{{ corrected }}</p>
+            {% endif %}
+        {% endif %}
+    </div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
