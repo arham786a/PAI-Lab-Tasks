@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ restaurant.name }} — Chat Assistant</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ════════════════════════════════
+       SIDEBAR
+  ════════════════════════════════ -->
+  <aside class="sidebar">
+
+    <!-- Brand -->
+    <div class="brand">
+      <span class="brand-flame">🔥</span>
+      <h1>{{ restaurant.name }}</h1>
+      <p>{{ restaurant.tagline if restaurant.tagline else "Fine Dining & Takeaway" }}</p>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="info-section">
+      <p class="info-label">Restaurant Info</p>
+
+      <div class="info-card">
+        <span class="info-ico">⏰</span>
+        <div class="info-body">
+          <span class="info-title">Hours</span>
+          <span class="info-val">
+            {{ restaurant.hours.weekdays }}<br>
+            {{ restaurant.hours.weekends }}
+          </span>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <span class="info-ico">📍</span>
+        <div class="info-body">
+          <span class="info-title">Address</span>
+          <span class="info-val">{{ restaurant.address }}</span>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <span class="info-ico">📞</span>
+        <div class="info-body">
+          <span class="info-title">Contact</span>
+          <span class="info-val">{{ restaurant.phone }}</span>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <span class="info-ico">🚀</span>
+        <div class="info-body">
+          <span class="info-title">Services</span>
+          <span class="info-val">
+            {% for s in restaurant.services %}
+              {{ s }}{% if not loop.last %} &nbsp;·&nbsp; {% endif %}
+            {% endfor %}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="s-divider"></div>
+
+    <!-- Quick Action Buttons -->
+    <div class="quick-section">
+      <p class="info-label">Quick Actions</p>
+      <div class="quick-grid">
+
+        <button class="qbtn" onclick="quickSend('show full menu')">
+          <span class="qbtn-ico">🍽️</span>
+          <span class="qbtn-txt">Full Menu</span>
+        </button>
+
+        <button class="qbtn" onclick="quickSend('book table')">
+          <span class="qbtn-ico">📅</span>
+          <span class="qbtn-txt">Book Table</span>
+        </button>
+
+        <button class="qbtn" onclick="quickSend('delivery info')">
+          <span class="qbtn-ico">🚴</span>
+          <span class="qbtn-txt">Delivery</span>
+        </button>
+
+        <button class="qbtn" onclick="quickSend('opening hours')">
+          <span class="qbtn-ico">⏰</span>
+          <span class="qbtn-txt">Hours</span>
+        </button>
+
+        <button class="qbtn" onclick="quickSend('fast food menu')">
+          <span class="qbtn-ico">🍔</span>
+          <span class="qbtn-txt">Fast Food</span>
+        </button>
+
+        <button class="qbtn" onclick="quickSend('desi food menu')">
+          <span class="qbtn-ico">🍛</span>
+          <span class="qbtn-txt">Desi Food</span>
+        </button>
+
+        <button class="qbtn" onclick="quickSend('desserts menu')">
+          <span class="qbtn-ico">🍮</span>
+          <span class="qbtn-txt">Desserts</span>
+        </button>
+
+        <button class="qbtn" onclick="quickSend('drinks menu')">
+          <span class="qbtn-ico">🥤</span>
+          <span class="qbtn-txt">Drinks</span>
+        </button>
+
+        <button class="qbtn" onclick="quickSend('price overview')">
+          <span class="qbtn-ico">💰</span>
+          <span class="qbtn-txt">Prices</span>
+        </button>
+
+        <button class="qbtn" onclick="quickSend('contact number')">
+          <span class="qbtn-ico">📞</span>
+          <span class="qbtn-txt">Contact</span>
+        </button>
+
+        <button class="qbtn" onclick="quickSend('our location')">
+          <span class="qbtn-ico">📍</span>
+          <span class="qbtn-txt">Location</span>
+        </button>
+
+        <button class="qbtn" onclick="quickSend('what services do you offer')">
+          <span class="qbtn-ico">🏪</span>
+          <span class="qbtn-txt">Services</span>
+        </button>
+
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ════════════════════════════════
+       CHAT AREA
+  ════════════════════════════════ -->
+  <main class="chat-area">
+
+    <!-- Header -->
+    <header class="chat-header">
+      <div class="header-left">
+        <div class="header-avatar">🤖</div>
+        <div class="header-info">
+          <h2>Restaurant Assistant</h2>
+          <div class="status-row">
+            <span class="status-dot"></span>
+            Always online — chat runs forever
+          </div>
+        </div>
+      </div>
+      <button class="header-reset" onclick="resetChat()" title="Clear chat and start over">
+        ↺ Reset Chat
+      </button>
+    </header>
+
+    <!-- Messages Window -->
+    <div id="chat-box">
+      <!-- Date chip — always visible at top -->
+      <div class="date-chip" id="date-chip">Today</div>
+      <!-- Messages are injected here by script.js -->
+    </div>
+
+    <!-- Input Bar -->
+    <div class="input-bar">
+      <textarea
+        id="user-input"
+        rows="1"
+        placeholder="Type a message… (Enter to send, Shift+Enter for new line)"
+        autocomplete="off"
+        spellcheck="true"
+      ></textarea>
+      <button id="send-btn" aria-label="Send message">
+        ➤
+      </button>
+    </div>
+
+    <!-- Hint line -->
+    <div class="input-hint">
+      💬 This chat has no limits — ask as many questions as you like!
+    </div>
+
+  </main>
+
+</div><!-- /.app-shell -->
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
